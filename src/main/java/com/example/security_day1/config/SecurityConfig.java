@@ -9,8 +9,14 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity(debug = true)
@@ -18,13 +24,15 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // 필요한 것들을 요청서를 만들어서 빈에 등록을 하는 거니까 선언적이다.
-        // 인증처리 메커니즘
         return http.authorizeHttpRequests()
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/user/**").hasAuthority("ROLE_USER")
                 .requestMatchers("/redirect-index").authenticated()
                 .anyRequest().permitAll()
+                .and()
+            .oauth2Login()
+                .clientRegistrationRepository(clientRegistrationRepository())
+                .authorizedClientService(auth2AuthorizedClientService())
                 .and()
             .formLogin()
                 .usernameParameter("username")
@@ -36,10 +44,17 @@ public class SecurityConfig {
             .logout()
                 .deleteCookies("LOGIN")
                 .invalidateHttpSession(true)
+                .logoutSuccessUrl("/")
                 .and()
             .csrf()
                 .disable()
+            .sessionManagement()
+                .sessionFixation()
+                    .none()
+                .and()
             .headers()
+                .cacheControl()
+                .and()
                 .defaultsDisabled()
                 .frameOptions().sameOrigin()
                 .and()
@@ -62,9 +77,25 @@ public class SecurityConfig {
         return
                 new BCryptPasswordEncoder();
     }
-
     @Bean
     public LoginSuccessHandler loginSuccessHandler() {
         return new LoginSuccessHandler();
+    }
+
+    @Bean
+    public ClientRegistrationRepository clientRegistrationRepository() {
+        return new InMemoryClientRegistrationRepository(github());
+
+    }
+    @Bean
+    public OAuth2AuthorizedClientService auth2AuthorizedClientService() {
+        return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository());
+    }
+    private ClientRegistration github() {
+        return CommonOAuth2Provider.GITHUB.getBuilder("github")
+                .userNameAttributeName("name")
+                .clientId("2c09b0f55dce7538cc6f")
+                .clientSecret("2cbd7dbdf89221227291749b3656b0ad57051948")
+            .build();
     }
 }
