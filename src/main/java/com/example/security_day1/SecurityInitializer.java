@@ -1,4 +1,4 @@
-package com.example.security_day1.util;
+package com.example.security_day1;
 
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;

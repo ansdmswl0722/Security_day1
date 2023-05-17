@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `Members` (
     `name` varchar(50) not null,
     `pwd` varchar(100) not null,
 
-    primary key('member_id')
+    primary key(`member_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `Authorities` (
@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS `Authorities` (
     primary key(`member_id`)
 );
 
-MERGE INTO `members` key (`member_id`) values ('admin','admin','admin');
-MERGE INTO `members` key (`member_id`) values ('moon','moon','moon');
-
-MERGE INTO `Autorities` key (`member_id`) values ('admin', 'ROLE_ADMIN');
-MERGE INTO `Autorities` key (`member_id`) values ('moon', 'ROLE_USER');
+-- MERGE INTO `Members` key (`member_id`) values ('admin','admin','admin');
+-- MERGE INTO `Members` key (`member_id`) values ('moon','moon','moon');
+--
+-- MERGE INTO `Authorities` key (`member_id`) values ('admin', 'ROLE_ADMIN');
+-- MERGE INTO `Authorities` key (`member_id`) values ('moon', 'ROLE_USER');

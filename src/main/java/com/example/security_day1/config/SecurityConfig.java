@@ -29,6 +29,7 @@ public class SecurityConfig {
             .formLogin()
                 .usernameParameter("username")
                 .passwordParameter("password")
+                .loginPage("/auth/login")
                 .loginProcessingUrl("/login-process")
                 .successHandler(loginSuccessHandler())
                 .and()
@@ -38,6 +39,10 @@ public class SecurityConfig {
                 .and()
             .csrf()
                 .disable()
+            .headers()
+                .defaultsDisabled()
+                .frameOptions().sameOrigin()
+                .and()
             .exceptionHandling()
                 .accessDeniedPage("/error/403")
                 .and()
@@ -54,7 +59,8 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return
+                new BCryptPasswordEncoder();
     }
 
     @Bean

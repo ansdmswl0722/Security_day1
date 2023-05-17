@@ -4,6 +4,8 @@ import com.example.security_day1.controller.ControllerBase;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -19,12 +21,17 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 @EnableWebMvc
 @Configuration
 @ComponentScan(basePackageClasses = ControllerBase.class)
-public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
+public class WebConfig implements WebMvcConfigurer, ApplicationContextAware, MessageSourceAware {
 
     private ApplicationContext applicationContext;
+    private MessageSource messageSource;
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
+    }
+    @Override
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -33,7 +40,7 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
         registry.addViewController("/admin/**").setViewName("admin");
         registry.addViewController("/user/**").setViewName("user");
         registry.addRedirectViewController("/redirect-index", "/");
-        registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/auth/login").setViewName("login");
         registry.addViewController("/logout").setViewName("logout");
         registry.addViewController("/error/403").setViewName("error403");
     }

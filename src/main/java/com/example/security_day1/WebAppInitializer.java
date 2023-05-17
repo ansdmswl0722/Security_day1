@@ -1,4 +1,4 @@
-package com.example.security_day1.util;
+package com.example.security_day1;
 
 import com.example.security_day1.config.RootConfig;
 import com.example.security_day1.config.WebConfig;

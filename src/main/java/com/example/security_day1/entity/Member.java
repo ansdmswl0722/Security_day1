@@ -16,7 +16,7 @@ public class Member {
     private String name;
     private String pwd;
 
-    @OneToOne(mappedBy = "member" , cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Authority authority;
 
 }

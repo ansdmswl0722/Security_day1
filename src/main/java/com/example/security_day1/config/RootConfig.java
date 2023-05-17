@@ -1,6 +1,6 @@
 package com.example.security_day1.config;
 
-import com.example.security_day1.util.Base;
+import com.example.security_day1.Base;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,7 @@ public class RootConfig {
     public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:~/securrity;DATABASE_TO_UPPER=false;MODE=LEGACY;"
+        dataSource.setUrl("jdbc:h2:~/security;DATABASE_TO_UPPER=false;MODE=LEGACY;"
             + "INIT=RUNSCRIPT FROM 'classpath:/script/schema.sql'");
         dataSource.setUsername("sa");
         dataSource.setPassword("");
